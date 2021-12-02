@@ -38,6 +38,20 @@ Edit2 = tk.Text(fm3,width=20, height=5, undo = True,font=("微软雅黑",10))
 
 Edit1.insert(INSERT, 'Input text at here......')
 
+Edit1.configure(fg='grey')  # 修改字体颜色，修改其它参数只需要传入对应的参数即可
+
+
+'''
+鼠标点击事件
+<Button-1>  鼠标左键
+<Button-2>   鼠标中间键（滚轮）
+<Button-3>  鼠标右键
+<Double-Button-1>   双击鼠标左键
+<Double-Button-3>   双击鼠标右键
+<Triple-Button-1>   三击鼠标左键
+<Triple-Button-3>   三击鼠标右键
+'''
+
 def TransfromA2B():
     var= Edit1.get('1.0',END)
     Edit2.delete('1.0',END)
@@ -69,10 +83,10 @@ def exchange_code():
     varSECOND_CODE.set(temp)
     return
 
-Translate_Button = tk.Button(fm2,text='Translate->',width=10,height=2,command=TransfromA2B)
-exchange_button = tk.Button(fm2,text='<-exchange->',width=5,height=2,command=exchange_code)
-back_button= tk.Button(fm2,text='Undo',width=5,height=2,command=back)
-callback_button= tk.Button(fm2,text='Redo',width=5,height=2,command=callback)
+Translate_Button = tk.Button(fm2,text='Translate →',width=10,height=2,command=TransfromA2B,bg="pink")
+exchange_button = tk.Button(fm2,text='← exchange →',width=5,height=2,command=exchange_code)
+back_button= tk.Button(fm2,text='◀Undo',width=5,height=2,command=back)
+callback_button= tk.Button(fm2,text='Redo▶',width=5,height=2,command=callback)
 
 #右键 剪切复制黏贴
 def callback1(event=None):
@@ -89,6 +103,12 @@ def callback3(event=None):
     global root
     Edit1.event_generate('<<Paste>>')
     Edit2.event_generate('<<Paste>>')
+
+def callback4(event=None):
+    global root
+    Edit1.event_generate('<<Paste>>')
+    Edit2.event_generate('<<Paste>>')
+
 '''创建一个弹出菜单'''
 menu = tk.Menu(windows,
             tearoff=False,
@@ -101,10 +121,21 @@ menu.add_command(label="Paste", command=callback3)
 def popup(event):
     menu.post(event.x_root, event.y_root)   # post在指定的位置显示弹出菜单
 
+Edit_firstClike = 1
+
+def clearEdit(event):
+    global Edit_firstClike    
+    if(Edit_firstClike):
+        Edit1.delete('1.0',END)
+        Edit1.configure(fg='black')  # 修改字体颜色，修改其它参数只需要传入对应的参数即可
+        Edit_firstClike = 0
+
+
+
 Edit1.bind("<Button-3>", popup)                 # 绑定鼠标右键,执行popup函数
 Edit2.bind("<Button-3>", popup)                 # 绑定鼠标右键,执行popup函数
  
-
+Edit1.bind("<Button-1>",clearEdit)              # 绑定鼠标左键,执行clearEdit函数
 
 
 #Frame1
@@ -116,6 +147,7 @@ exchange_button.pack(side=TOP,anchor=W,fill=X,expand=N)
 Translate_Button.pack(side=TOP,anchor=W,fill=BOTH,expand=YES)
 back_button.pack(side=LEFT,anchor=W,fill=X,expand=YES)
 callback_button.pack(side=LEFT,anchor=W,fill=X,expand=YES)
+
 #Frame3
 SECOND_CODE.pack(side=TOP,anchor=W,fill=X,expand=N)
 Edit2.pack(side=TOP,anchor=W,fill=BOTH,expand=YES)
